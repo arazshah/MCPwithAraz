@@ -1,643 +1,1366 @@
-: 20px 0;
-}
+<!DOCTYPE html>
+<html lang="fa"
+      dir="rtl">
 
-.flow-item {
-background: white;
-padding: 20px;
-border-radius: 10px;
-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-margin: 10px;
-min-width: 150px;
-text-align: center;
-}
-
-.arrow {
-font-size: 2em;
-color: #667eea;
-margin: 0 10px;
-}
-
-.example-section {
-background: #e8f4f8;
-padding: 30px;
-border-radius: 15px;
-margin: 30px 0;
-}
-
-.tip-box {
-background: #fff3cd;
-border-right: 5px solid #ffc107;
-padding: 20px;
-border-radius: 10px;
-margin: 20px 0;
-font-family: 'Vazir', sans-serif;
-}
-
-.tip-box::before {
-content: "💡 نکته: ";
-font-weight: bold;
-color: #856404;
-}
-
-.progress-indicator {
-position: fixed;
-top: 0;
-right: 0;
-width: 5px;
-height: 100%;
-background: rgba(255, 255, 255, 0.2);
-z-index: 1000;
-}
-
-.progress-bar {
-width: 100%;
-background: linear-gradient(to bottom, #667eea, #764ba2);
-transition: height 0.3s ease;
-}
-
-/* Footer Styles */
-.footer {
-background: rgba(255, 255, 255, 0.1);
-backdrop-filter: blur(10px);
-border-radius: 20px;
-padding: 40px;
-margin-top: 50px;
-text-align: center;
-color: white;
-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
-
-.footer h3 {
-color: white;
-font-size: 1.8em;
-margin-bottom: 20px;
-}
-
-.footer a {
-color: #f0f0f0;
-text-decoration: none;
-font-weight: bold;
-transition: color 0.3s ease;
-}
-
-.footer a:hover {
-color: #ffd700;
-text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-}
-
-.author-info {
-background: rgba(255, 255, 255, 0.2);
-border-radius: 15px;
-padding: 20px;
-margin-top: 20px;
-font-family: 'Sahel', sans-serif;
-}
-
-code {
-background: #e9ecef;
-padding: 2px 6px;
-border-radius: 3px;
-font-family: 'Consolas', monospace;
-font-size: 0.9em;
-direction: ltr;
-display: inline-block;
-}
-
-@media (max-width: 768px) {
-h1 {
-font-size: 2em;
-}
-
-.content-section {
-padding: 20px;
-}
-
-.flow-chart {
-flex-direction: column;
-}
-
-.arrow {
-transform: rotate(90deg);
-}
-}
-</style>
-
-<div class="container">
-    <header>
-        <h1>Model Context Protocol (MCP)</h1>
-        <p class="subtitle">راهنمای جامع و کاربردی برای توسعه‌دهندگان</p>
-    </header>
-
-    <div class="content-section">
-        <div class="intro-box">
-            <p>سلام! من امروز می‌خواهم شما را با یکی از جذاب‌ترین و کاربردی‌ترین پروتکل‌های دنیای هوش مصنوعی آشنا کنم.
-                MCP یا Model Context Protocol یک استاندارد متن‌باز است که توسط Anthropic توسعه داده شده و قرار است نحوه
-                تعامل LLM‌ها با منابع داده و ابزارهای خارجی را متحول کند!</p>
-        </div>
-
-        <h2>🎯 MCP چیست و چرا باید به آن اهمیت دهیم؟</h2>
-        <p>تصور کنید می‌خواهید Claude یا هر LLM دیگری بتواند مستقیماً به دیتابیس شما متصل شود، فایل‌های محلی را بخواند،
-            یا با API‌های مختلف تعامل کند. MCP دقیقاً برای حل این چالش طراحی شده است!</p>
-
-        <div class="feature-grid">
-            <div class="feature-card">
-                <h3>🔌 اتصال استاندارد</h3>
-                <p>یک پروتکل واحد برای اتصال LLM‌ها به هر نوع منبع داده یا ابزار</p>
-            </div>
-            <div class="feature-card">
-                <h3>🛡️ امنیت بالا</h3>
-                <p>کنترل دقیق دسترسی‌ها و مجوزها برای حفظ امنیت داده‌ها</p>
-            </div>
-            <div class="feature-card">
-                <h3>🚀 مقیاس‌پذیری</h3>
-                <p>قابلیت توسعه آسان و اضافه کردن منابع جدید بدون تغییر در کد اصلی</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="content-section">
-        <h2>🏗️ معماری MCP</h2>
-        <div class="architecture-diagram">
-            <div class="flow-chart">
-                <div class="flow-item">
-                    <strong>Client Application</strong>
-                    <p>(Claude Desktop)</p>
-                </div>
-                <span class="arrow">→</span>
-                <div class="flow-item">
-                    <strong>MCP Protocol</strong>
-                    <p>(JSON-RPC)</p>
-                </div>
-                <span class="arrow">→</span>
-                <div class="flow-item">
-                    <strong>MCP Server</strong>
-                    <p>(Python/Node.js)</p>
-                </div>
-                <span class="arrow">→</span>
-                <div class="flow-item">
-                    <strong>Data Sources</strong>
-                    <p>(DB, Files, APIs)</p>
-                </div>
-            </div>
-        </div>
-
-        <h3>اجزای اصلی MCP:</h3>
-        <ul>
-            <li><strong>MCP Host:</strong> برنامه‌ای مثل Claude Desktop که از MCP پشتیبانی می‌کند</li>
-            <li><strong>MCP Server:</strong> سرویسی که به منابع داده متصل می‌شود و آن‌ها را در دسترس قرار می‌دهد</li>
-            <li><strong>Transport Layer:</strong> لایه ارتباطی (معمولاً stdio یا HTTP)</li>
-            <li><strong>Protocol Messages:</strong> پیام‌های JSON-RPC برای تبادل اطلاعات</li>
-        </ul>
-    </div>
-
-    <div class="content-section">
-        <h2>🛠️ شروع کار با MCP</h2>
-
-        <h3>1. نصب ابزارهای مورد نیاز</h3>
-        <div class="code-block">
-            <button class="copy-button"
-                    onclick="copyCode(this)">کپی</button>
-            <pre># نصب MCP SDK برای Python
-
-
-pip install mcp
-
-یا برای Node.js
-
-npm install @modelcontextprotocol/sdk
-
-
-        <h3>2. ایجاد یک MCP Server ساده</h3>
-        <p>بیایید یک سرور MCP بسازیم که به دیتابیس PostgreSQL شما متصل می‌شود:</p>
-
-        <div class="code-block">
-            <button class="copy-button" onclick="copyCode(this)">کپی</button>
-            <pre># blog_mcp_server.py
-
-
-import asyncio
-from mcp.server import Server, stdio_server
-from mcp.server.models import InitializationOptions
-import asyncpg
-import json
-
-class BlogMCPServer:
-def init(self):
-self.server = Server(“blog-server”)
-self.db_pool = None
-
-    # تعریف ابزارها
-    @self.server.tool()
-    async def get_posts(limit: int = 10, offset: int = 0):
-        """دریافت لیست پست‌های وبلاگ"""
-        async with self.db_pool.acquire() as conn:
-            posts = await conn.fetch(
-                "SELECT * FROM posts ORDER BY created_at DESC LIMIT $1 OFFSET $2",
-                limit, offset
-            )
-            return [dict(post) for post in posts]
-    
-    @self.server.tool()
-    async def get_post_by_id(post_id: int):
-        """دریافت جزئیات یک پست"""
-        async with self.db_pool.acquire() as conn:
-            post = await conn.fetchrow(
-                "SELECT * FROM posts WHERE id = $1", post_id
-            )
-            return dict(post) if post else None
-    
-    @self.server.tool()
-    async def search_posts(query: str):
-        """جستجو در پست‌ها"""
-        async with self.db_pool.acquire() as conn:
-            posts = await conn.fetch(
-                """SELECT * FROM posts 
-                   WHERE title ILIKE $1 OR content ILIKE $1
-                   ORDER BY created_at DESC""",
-                f"%{query}%"
-            )
-            return [dict(post) for post in posts]
-
-async def run(self):
-    # اتصال به دیتابیس
-    self.db_pool = await asyncpg.create_pool(
-        'postgresql://user:password@localhost/blog_db'
-    )
-    
-    # اجرای سرور
-    async with stdio_server() as (read_stream, write_stream):
-        await self.server.run(
-            read_stream,
-            write_stream,
-            InitializationOptions(
-                server_name="blog-mcp-server",
-                server_version="1.0.0"
-            )
-        )
-
-
-if name == “main”:
-server = BlogMCPServer()
-asyncio.run(server.run())
-
-
-        <div class="tip-box">
-            این سرور MCP می‌تواند مستقیماً با Claude Desktop کار کند و به او اجازه دهد اطلاعات وبلاگ شما را بخواند و جستجو کند!
-        </div>
-    </div>
-
-    <div class="content-section">
-        <h2>⚙️ پیکربندی Claude Desktop</h2>
-        <p>برای استفاده از سرور MCP در Claude Desktop، باید فایل پیکربندی را ویرایش کنید:</p>
-
-        <div class="code-block">
-            <button class="copy-button" onclick="copyCode(this)">کپی</button>
-            <pre># claude_desktop_config.json
-
-
-{
-“mcpServers”: {
-“blog-server”: {
-“command”: “python”,
-“args”: [“path/to/blog_mcp_server.py”],
-“env”: {
-“DATABASE_URL”: “postgresql://user:password@localhost/blog_db”
-}
-}
-}
-}
-
-
-        <p>محل فایل پیکربندی:</p>
-        <ul>
-            <li><strong>macOS:</strong> <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
-            <li><strong>Windows:</strong> <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
-            <li><strong>Linux:</strong> <code>~/.config/Claude/claude_desktop_config.json</code></li>
-        </ul>
-    </div>
-
-    <div class="content-section">
-        <h2>🎨 مثال کاربردی: تبدیل API وبلاگ به MCP</h2>
-        
-        <div class="example- section">
-            <h3>سناریو: وبلاگ Django + React</h3>
-            <p>با توجه به پروژه وبلاگی که در حال توسعه آن هستید، می‌توانیم یک سرور MCP جامع بسازیم:</p>
-
-            <div class="code-block">
-                <button class="copy-button" onclick="copyCode(this)">کپی</button>
-                <pre># advanced_blog_mcp.py
-
-
-from mcp.server import Server, stdio_server
-from mcp.server.models import InitializationOptions
-import httpx
-import asyncio
-from typing import Optional, List, Dict
-
-class AdvancedBlogMCP:
-def init(self, api_base_url: str):
-self.server = Server(“advanced-blog-server”)
-self.api_base_url = api_base_url
-self.client = httpx.AsyncClient()
-
-    # مدیریت پست‌ها
-    @self.server.tool()
-    async def create_post(
-        title: str, 
-        content: str, 
-        tags: List[str] = None,
-        category: str = None
-    ):
-        """ایجاد پست جدید در وبلاگ"""
-        data = {
-            "title": title,
-            "content": content,
-            "tags": tags or [],
-            "category": category
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>کتاب جامع پروتکل زمینه مدل (MCP) - آراز شاه کرمی</title>
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap"
+          rel="stylesheet">
+    <style>
+        :root {
+            /* Green Theme Colors */
+            --bg-color: #f0f4f0;
+            --page-bg: #ffffff;
+            --primary-green: #2d5016;
+            --secondary-green: #4a7c2e;
+            --accent-green: #6fa34d;
+            --light-green: #a8d5a8;
+            --very-light-green: #e8f5e8;
+            --text-color: #2c3e2c;
+            --header-color: #1a3a1a;
+            --code-bg: #f5faf5;
+            --code-border: #c5e1c5;
+            --shadow-color: rgba(45, 80, 22, 0.1);
+            --highlight-bg: #fffacd;
         }
-        response = await self.client.post(
-            f"{self.api_base_url}/api/posts/",
-            json=data
-        )
-        return response.json()
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 2;
+            font-size: 17px;
+            padding: 20px;
+            background-image:
+                repeating-linear-gradient(45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(45, 80, 22, 0.02) 10px,
+                    rgba(45, 80, 22, 0.02) 20px);
+        }
+
+        .book-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--page-bg);
+            box-shadow:
+                0 0 40px var(--shadow-color),
+                inset 0 0 30px rgba(45, 80, 22, 0.02);
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Book spine effect */
+        .book-container::before {
+            content: '';
+            position: absolute;
+            left: 40px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom,
+                    transparent 5%,
+                    var(--light-green) 10%,
+                    var(--light-green) 90%,
+                    transparent 95%);
+            box-shadow:
+                -1px 0 3px rgba(0, 0, 0, 0.1),
+                1px 0 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .page {
+            padding: 60px 80px 60px 100px;
+            background:
+                linear-gradient(to right,
+                    rgba(45, 80, 22, 0.02) 0%,
+                    transparent 50px),
+                var(--page-bg);
+            min-height: 100vh;
+        }
+
+        /* Chapter Title */
+        .book-title {
+            text-align: center;
+            margin-bottom: 60px;
+            padding-bottom: 30px;
+            border-bottom: 3px double var(--secondary-green);
+        }
+
+        .book-title h1 {
+            font-size: 3em;
+            color: var(--primary-green);
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px var(--shadow-color);
+        }
+
+        .book-title .subtitle {
+            font-size: 1.3em;
+            color: var(--secondary-green);
+            font-weight: 400;
+        }
+
+        .book-title .author {
+            margin-top: 30px;
+            font-size: 1.1em;
+            color: var(--accent-green);
+        }
+
+        /* Headers */
+        h2 {
+            font-size: 2.2em;
+            color: var(--primary-green);
+            margin: 50px 0 25px 0;
+            font-weight: 600;
+            position: relative;
+            padding-right: 30px;
+        }
+
+        h2::before {
+            content: '📖';
+            position: absolute;
+            right: 0;
+            opacity: 0.3;
+        }
+
+        h3 {
+            font-size: 1.6em;
+            color: var(--secondary-green);
+            margin: 35px 0 20px 0;
+            font-weight: 500;
+            border-right: 4px solid var(--accent-green);
+            padding-right: 15px;
+        }
+
+        h4 {
+            font-size: 1.3em;
+            color: var(--accent-green);
+            margin: 25px 0 15px 0;
+            font-weight: 500;
+        }
+
+        /* Paragraphs and Text */
+        p {
+            margin-bottom: 1.8em;
+            text-align: justify;
+            text-indent: 30px;
+        }
+
+        p:first-of-type::first-letter {
+            font-size: 3.5em;
+            float: right;
+            line-height: 1;
+            margin-left: 10px;
+            margin-top: -5px;
+            color: var(--primary-green);
+            font-weight: 700;
+            text-shadow: 2px 2px 4px var(--shadow-color);
+        }
+
+        /* Links */
+        a {
+            color: var(--secondary-green);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent-green);
+            transition: all 0.3s;
+        }
+
+        a:hover {
+            color: var(--primary-green);
+            border-bottom-style: solid;
+        }
+
+        /* Lists */
+        ul,
+        ol {
+            margin: 20px 40px 30px 40px;
+        }
+
+        li {
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+
+        /* Code Blocks */
+        code {
+            font-family: 'Courier New', monospace;
+            background-color: var(--very-light-green);
+            color: var(--primary-green);
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            border: 1px solid var(--code-border);
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            border: 1px solid var(--code-border);
+            border-radius: 8px;
+            padding: 25px;
+            margin: 25px 0 35px 0;
+            overflow-x: auto;
+            box-shadow: inset 0 2px 4px rgba(45, 80, 22, 0.05);
+            direction: ltr;
+            text-align: left;
+            position: relative;
+        }
+
+        pre::before {
+            content: 'کد';
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            background-color: var(--accent-green);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        pre code {
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* Syntax Highlighting */
+        .code-comment {
+            color: #6a8759;
+            font-style: italic;
+        }
+
+        .code-key {
+            color: #2d5016;
+            font-weight: bold;
+        }
+
+        .code-string {
+            color: #6a7c2e;
+        }
+
+        .code-number {
+            color: #4a7c2e;
+        }
+
+        .code-keyword {
+            color: #1a3a1a;
+            font-weight: bold;
+        }
+
+        /* Special Boxes */
+        .info-box,
+        .warning-box,
+        .tip-box {
+            padding: 20px 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+            position: relative;
+            padding-right: 50px;
+        }
+
+        .info-box {
+            background-color: #e8f5e8;
+            border-right: 5px solid var(--accent-green);
+        }
+
+        .warning-box {
+            background-color: #fff9e6;
+            border-right: 5px solid #f0ad4e;
+        }
+
+        .tip-box {
+            background-color: #f0f8ff;
+            border-right: 5px solid #5bc0de;
+        }
+
+        .info-box::before {
+            content: '💡';
+        }
+
+        .warning-box::before {
+            content: '⚠️';
+        }
+
+        .tip-box::before {
+            content: '💪';
+        }
+
+        .info-box::before,
+        .warning-box::before,
+        .tip-box::before {
+            position: absolute;
+            right: 15px;
+            top: 20px;
+            font-size: 1.5em;
+        }
+
+        /* Highlights */
+        .highlight {
+            background-color: var(--highlight-bg);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+
+        /* Table of Contents */
+        .toc {
+            background-color: var(--very-light-green);
+            border: 2px solid var(--light-green);
+            border-radius: 10px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+
+        .toc h3 {
+            border: none;
+            padding: 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .toc ul {
+            list-style: none;
+            margin: 0;
+        }
+
+        .toc li {
+            margin-bottom: 10px;
+            padding-right: 20px;
+            position: relative;
+        }
+
+        .toc li::before {
+            content: '◈';
+            position: absolute;
+            right: 0;
+            color: var(--accent-green);
+        }
+
+        /* Footer */
+        .book-footer {
+            margin-top: 80px;
+            padding-top: 40px;
+            border-top: 3px double var(--secondary-green);
+            text-align: center;
+            color: var(--accent-green);
+        }
+
+        /* Page Numbers */
+        .page-number {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--accent-green);
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page {
+                padding: 40px 30px 40px 50px;
+            }
+
+            .book-title h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            h3 {
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="book-container">
+        <div class="page">
+
+            <div class="book-title">
+                <h1>پروتکل زمینه مدل</h1>
+                <div class="subtitle">راهنمای جامع و کاربردی MCP</div>
+                <div class="author">نویسنده: آراز شاه کرمی</div>
+            </div>
+
+            <div class="toc">
+                <h3>فهرست مطالب</h3>
+                <ul>
+                    <li><a href="#intro">مقدمه: آشنایی با دنیای جدید هوش مصنوعی</a></li>
+                    <li><a href="#what-is-mcp">فصل اول: MCP چیست؟</a></li>
+                    <li><a href="#why-mcp">فصل دوم: چرا به MCP نیاز داریم؟</a></li>
+                    <li><a href="#components">فصل سوم: اجزای تشکیل‌دهنده MCP</a></li>
+                    <li><a href="#implementation">فصل چهارم: پیاده‌سازی عملی</a></li>
+                    <li><a href="#examples">فصل پنجم: مثال‌های کاربردی</a></li>
+                    <li><a href="#best-practices">فصل ششم: بهترین شیوه‌ها</a></li>
+                    <li><a href="#future">فصل هفتم: آینده MCP</a></li>
+                </ul>
+            </div>
+
+            <h2 id="intro">مقدمه: آشنایی با دنیای جدید هوش مصنوعی</h2>
+
+            <p>
+                در دنیای امروز، هوش مصنوعی به سرعت در حال تبدیل شدن به بخشی جدایی‌ناپذیر از زندگی روزمره ماست. از
+                دستیارهای صوتی گرفته تا سیستم‌های پیشنهاد محتوا، همه جا رد پای این فناوری را می‌توان دید. اما یکی از
+                چالش‌های اساسی که همواره در این مسیر وجود داشته، مسئله «حافظه» و «زمینه» در تعاملات با هوش مصنوعی بوده
+                است.
+            </p>
+
+            <p>
+                تصور کنید هر بار که با یک دوست صحبت می‌کنید، او همه چیز را فراموش کرده باشد. نه نام شما را به خاطر دارد،
+                نه موضوعات قبلی صحبت‌تان را، و نه حتی اینکه دقیقاً یک دقیقه پیش درباره چه چیزی حرف می‌زدید. این دقیقاً
+                همان مشکلی است که در تعامل با مدل‌های زبانی بزرگ (LLMs) وجود دارد. آن‌ها ذاتاً «بی‌حالت» (Stateless)
+                هستند.
+            </p>
+
+            <div class="info-box">
+                <strong>نکته مهم:</strong> مدل‌های زبانی بزرگ مانند GPT، Claude و Gemini، با وجود قدرت شگفت‌انگیزشان در
+                درک و تولید متن، هیچ حافظه‌ای از تعاملات قبلی ندارند. هر درخواست برای آن‌ها مانند اولین برخورد است.
+            </div>
+
+            <p>
+                اینجاست که <span class="highlight">پروتکل زمینه مدل (Model Context Protocol)</span> یا به اختصار <span
+                      class="highlight">MCP</span> وارد می‌شود. این پروتکل، راه‌حلی استاندارد و قدرتمند برای حل مشکل
+                حافظه و زمینه در تعاملات با هوش مصنوعی ارائه می‌دهد. در این کتاب، قصد داریم به صورت جامع و گام به گام با
+                این پروتکل آشنا شویم و یاد بگیریم چگونه می‌توانیم از آن در پروژه‌های واقعی استفاده کنیم.
+            </p>
+
+            <h2 id="what-is-mcp">فصل اول: MCP چیست؟</h2>
+
+            <h3>تعریف و مفهوم اولیه</h3>
+
+            <p>
+                پروتکل زمینه مدل (MCP) یک استاندارد ارتباطی است که برای مدیریت و انتقال «زمینه» (Context) بین کلاینت‌ها
+                و سرورهای هوش مصنوعی طراحی شده است. به زبان ساده‌تر، MCP مانند یک «قرارداد» یا «زبان مشترک» است که مشخص
+                می‌کند چگونه اطلاعات مربوط به حافظه، تاریخچه مکالمات، و قابلیت‌های مدل باید بین دو طرف رد و بدل شود.
+            </p>
+
+            <p>
+                برای درک بهتر، بیایید یک مثال ساده بزنیم. فرض کنید شما در حال ساخت یک دستیار هوشمند برای وبلاگ خود
+                هستید. این دستیار باید بتواند:
+            </p>
+
+            <ul>
+                <li>کاربران را به نام بشناسد و خطاب قرار دهد</li>
+                <li>علاقه‌مندی‌ها و سوابق مطالعه آن‌ها را به خاطر بسپارد</li>
+                <li>در طول یک مکالمه طولانی، موضوع اصلی را گم نکند</li>
+                <li>وظایف چندمرحله‌ای مانند نوشتن و ویرایش مقاله را مدیریت کند</li>
+            </ul>
+
+            <p>
+                بدون MCP، پیاده‌سازی چنین قابلیت‌هایی نیازمند کدنویسی پیچیده و مدیریت دستی حالت‌ها است. اما با MCP، شما
+                فقط باید یک «بسته زمینه» (Context Package) را بین کلاینت و سرور رد و بدل کنید.
+            </p>
+
+            <h3>ساختار کلی یک بسته MCP</h3>
+
+            <p>
+                در قلب MCP، یک شیء JSON قرار دارد که معمولاً <code>context</code> نامیده می‌شود. این شیء حاوی تمام
+                اطلاعاتی است که برای حفظ حالت و زمینه یک مکالمه نیاز است. ساختار پایه آن به این شکل است:
+            </p>
+
+            <pre><code>{
+  <span class="code-key">"context"</span>: {
+    <span class="code-key">"messages"</span>: [...],     <span class="code-comment">// تاریخچه پیام‌ها</span>
+    <span class="code-key">"memory"</span>: {...},       <span class="code-comment">// حافظه بلندمدت</span>
+    <span class="code-key">"tools"</span>: [...],       <span class="code-comment">// ابزارهای در دسترس</span>
+    <span class="code-key">"metadata"</span>: {...}      <span class="code-comment">// اطلاعات جانبی</span>
+  }
+}</code></pre>
+
+            <div class="tip-box">
+                <strong>نکته طلایی:</strong> فکر کنید <code>context</code> مانند یک کوله‌پشتی است که مدل هوش مصنوعی
+                همیشه با خود حمل می‌کند. هر چیزی که برای «به خاطر سپردن» نیاز دارد، در این کوله‌پشتی قرار می‌گیرد.
+            </div>
+
+            <h2 id="why-mcp">فصل دوم: چرا به MCP نیاز داریم؟</h2>
+
+            <h3>چالش‌های دنیای بدون MCP</h3>
+
+            <p>
+                قبل از ظهور استانداردهایی مانند MCP، توسعه‌دهندگان با چالش‌های متعددی مواجه بودند. بیایید نگاهی به
+                مهم‌ترین این چالش‌ها بیندازیم:
+            </p>
+
+            <h4>۱. مدیریت دستی حالت (State Management)</h4>
+            <p>
+                در روش‌های سنتی، توسعه‌دهندگان مجبور بودند برای هر مکالمه، یک سیستم پیچیده مدیریت حالت پیاده‌سازی کنند.
+                این کار نه تنها زمان‌بر بود، بلکه منجر به کدهای پیچیده و اشکال‌زدایی دشوار می‌شد.
+            </p>
+
+            <h4>۲. عدم استاندارد بودن</h4>
+            <p>
+                هر تیم و شرکتی روش خاص خود را برای مدیریت زمینه داشت. این تنوع باعث می‌شد که اشتراک‌گذاری کد، استفاده از
+                کتابخانه‌های مشترک، و همکاری بین تیم‌ها بسیار دشوار شود.
+            </p>
+
+            <h4>۳. محدودیت در مقیاس‌پذیری</h4>
+            <p>
+                با افزایش تعداد کاربران و پیچیدگی مکالمات، سیستم‌های دست‌ساز به سرعت با مشکلات عملکردی مواجه می‌شدند.
+                نگهداری هزاران یا میلیون‌ها حالت مکالمه به صورت همزمان، نیازمند معماری‌های بسیار پیچیده بود.
+            </p>
+
+            <div class="warning-box">
+                <strong>هشدار:</strong> بدون یک پروتکل استاندارد، هر بار که می‌خواهید از یک مدل جدید استفاده کنید یا با
+                یک سرویس دیگر ادغام شوید، باید بخش زیادی از کد خود را بازنویسی کنید.
+            </div>
+
+            <h3>مزایای استفاده از MCP</h3>
+
+            <p>
+                حالا که با چالش‌ها آشنا شدیم، بیایید ببینیم MCP چگونه این مشکلات را حل می‌کند:
+            </p>
+
+            <h4>۱. سادگی در پیاده‌سازی</h4>
+            <p>
+                با MCP، شما فقط نیاز دارید یک شیء JSON را دریافت و ارسال کنید. نیازی به پیاده‌سازی سیستم‌های پیچیده
+                مدیریت حالت نیست. این سادگی باعث می‌شود توسعه‌دهندگان بتوانند روی منطق اصلی برنامه تمرکز کنند.
+            </p>
+
+            <pre><code><span class="code-comment"># مثال ساده در Python</span>
+<span class="code-keyword">def</span> handle_mcp_request(incoming_context):
+    <span class="code-comment"># پردازش ساده context</span>
+    response = ai_model.generate(incoming_context)
     
-    @self.server.tool()
-    async def update_post(
-        post_id: int,
-        title: Optional[str] = None,
-        content: Optional[str] = None
-    ):
-        """ویرایش پست موجود"""
-        data = {}
-        if title: data["title"] = title
-        if content: data["content"] = content
+    <span class="code-comment"># به‌روزرسانی و بازگرداندن context</span>
+    updated_context = update_context(incoming_context, response)
+    <span class="code-keyword">return</span> updated_context</code></pre>
+
+            <h4>۲. قابلیت همکاری (Interoperability)</h4>
+            <p>
+                از آنجایی که MCP یک استاندارد است، ابزارها و سرویس‌های مختلف می‌توانند به راحتی با یکدیگر ارتباط برقرار
+                کنند. این یعنی شما می‌توانید از کتابخانه‌ها و ابزارهای آماده استفاده کنید.
+            </p>
+
+            <h4>۳. مقیاس‌پذیری ذاتی</h4>
+            <p>
+                ساختار MCP به گونه‌ای طراحی شده که به راحتی قابل مقیاس‌دهی است. چه یک کاربر داشته باشید چه یک میلیون
+                کاربر، اصول اساسی یکسان باقی می‌مانند.
+            </p>
+
+            <h2 id="components">فصل سوم: اجزای تشکیل‌دهنده MCP</h2>
+
+            <p>
+                حالا وقت آن رسیده که عمیق‌تر به ساختار MCP بپردازیم. هر بسته MCP از چندین بخش کلیدی تشکیل شده که هر کدام
+                نقش خاصی در حفظ و مدیریت زمینه دارند.
+            </p>
+
+            <h3>۱. پیام‌ها (Messages)</h3>
+
+            <p>
+                بخش <code>messages</code> قلب تپنده هر مکالمه است. این بخش آرایه‌ای از پیام‌هاست که تاریخچه مکالمه را
+                نشان می‌دهد. هر پیام دارای دو ویژگی اصلی است:
+            </p>
+
+            <ul>
+                <li><strong>role</strong>: نقش فرستنده پیام (user, assistant, system)</li>
+                <li><strong>content</strong>: محتوای پیام</li>
+            </ul>
+
+            <pre><code><span class="code-key">"messages"</span>: [
+  {
+    <span class="code-key">"role"</span>: <span class="code-string">"system"</span>,
+    <span class="code-key">"content"</span>: <span class="code-string">"شما یک دستیار وبلاگ نویسی حرفه‌ای هستید."</span>
+  },
+  {
+    <span class="code-key">"role"</span>: <span class="code-string">"user"</span>,
+    <span class="code-key">"content"</span>: <span class="code-string">"می‌خواهم یک مقاله درباره Django بنویسم."</span>
+  },
+  {
+    <span class="code-key">"role"</span>: <span class="code-string">"assistant"</span>,
+    <span class="code-key">"content"</span>: <span class="code-string">"عالی! Django یک فریم‌ورک قدرتمند پایتون است. بیایید با یک طرح کلی شروع کنیم..."</span>
+  }
+]</code></pre>
+
+            <div class="info-box">
+                <strong>نکته مهم:</strong> ترتیب پیام‌ها بسیار مهم است. مدل از این ترتیب برای درک جریان مکالمه استفاده
+                می‌کند. همیشه پیام‌های جدید را به انتهای آرایه اضافه کنید.
+            </div>
+
+            <h3>۲. حافظه (Memory)</h3>
+
+            <p>
+                بخش <code>memory</code> جایی است که اطلاعات بلندمدت نگهداری می‌شوند. برخلاف پیام‌ها که معمولاً پس از چند
+                تعامل حذف می‌شوند، حافظه می‌تواند برای مدت طولانی حفظ شود. این بخش می‌تواند شامل موارد زیر باشد:
+            </p>
+
+            <ul>
+                <li>اطلاعات شخصی کاربر</li>
+                <li>تنظیمات و ترجیحات</li>
+                <li>تاریخچه فعالیت‌ها</li>
+                <li>وضعیت وظایف در حال انجام</li>
+            </ul>
+
+            <pre><code><span class="code-key">"memory"</span>: {
+  <span class="code-key">"user_profile"</span>: {
+    <span class="code-key">"name"</span>: <span class="code-string">"آراز شاه کرمی"</span>,
+    <span class="code-key">"interests"</span>: [<span class="code-string">"Django"</span>, <span class="code-string">"React"</span>, <span class="code-string">"AI"</span>],
+<span class="code-key">"writing_style"</span>: <span class="code-string">"technical_but_accessible"</span>,
+<span class="code-key">"preferred_language"</span>: <span class="code-string">"persian"</span>
+},
+<span class="code-key">"current_project"</span>: {
+<span class="code-key">"type"</span>: <span class="code-string">"blog_development"</span>,
+<span class="code-key">"technologies"</span>: [<span class="code-string">"Django"</span>, <span
+      class="code-string">"DRF"</span>, <span class="code-string">"React"</span>, <span
+      class="code-string">"PostgreSQL"</span>],
+<span class="code-key">"status"</span>: <span class="code-string">"api_development_phase"</span>
+},
+<span class="code-key">"preferences"</span>: {
+<span class="code-key">"code_style"</span>: <span class="code-string">"detailed_comments"</span>,
+<span class="code-key">"explanation_level"</span>: <span class="code-string">"comprehensive"</span>
+}
+}</code></pre>
+
+<h3>۳. ابزارها (Tools)</h3>
+
+<p>
+    بخش <code>tools</code> به مدل اطلاع می‌دهد که چه قابلیت‌ها و توابعی در اختیار دارد. این ابزارها می‌توانند شامل
+    دسترسی به پایگاه داده، API های خارجی، یا توابع خاص برنامه باشند.
+</p>
+
+<pre><code><span class="code-key">"tools"</span>: [
+  {
+    <span class="code-key">"name"</span>: <span class="code-string">"search_blog_posts"</span>,
+    <span class="code-key">"description"</span>: <span class="code-string">"جستجو در مقالات وبلاگ"</span>,
+    <span class="code-key">"parameters"</span>: {
+      <span class="code-key">"query"</span>: <span class="code-string">"string"</span>,
+      <span class="code-key">"limit"</span>: <span class="code-string">"integer"</span>
+    }
+  },
+  {
+    <span class="code-key">"name"</span>: <span class="code-string">"create_draft"</span>,
+    <span class="code-key">"description"</span>: <span class="code-string">"ایجاد پیش‌نویس جدید"</span>,
+    <span class="code-key">"parameters"</span>: {
+      <span class="code-key">"title"</span>: <span class="code-string">"string"</span>,
+      <span class="code-key">"content"</span>: <span class="code-string">"string"</span>,
+      <span class="code-key">"tags"</span>: <span class="code-string">"array"</span>
+    }
+  }
+]</code></pre>
+
+<h3>۴. متادیتا (Metadata)</h3>
+
+<p>
+    بخش <code>metadata</code> اطلاعات جانبی و تکمیلی را نگهداری می‌کند. این اطلاعات ممکن است شامل نسخه پروتکل، زمان
+    آخرین به‌روزرسانی، یا تنظیمات فنی باشد.
+</p>
+
+<pre><code><span class="code-key">"metadata"</span>: {
+  <span class="code-key">"protocol_version"</span>: <span class="code-string">"1.0"</span>,
+  <span class="code-key">"session_id"</span>: <span class="code-string">"sess_12345"</span>,
+  <span class="code-key">"last_updated"</span>: <span class="code-string">"2024-10-04T10:30:00Z"</span>,
+  <span class="code-key">"client_info"</span>: {
+    <span class="code-key">"app_name"</span>: <span class="code-string">"Araz Blog Assistant"</span>,
+    <span class="code-key">"version"</span>: <span class="code-string">"2.1.0"</span>
+  }
+}</code></pre>
+
+<h2 id="implementation">فصل چهارم: پیاده‌سازی عملی</h2>
+
+<p>
+    حالا که با اجزای نظری MCP آشنا شدیم، وقت آن رسیده که دست به کار شویم و یک پیاده‌سازی واقعی را مرور کنیم. در این بخش،
+    نشان خواهیم داد چگونه می‌توانید وبلاگ Django خود را به یک سرور MCP تبدیل کنید.
+</p>
+
+<h3>معماری کلی سیستم</h3>
+
+<p>
+    سیستم ما از سه بخش اصلی تشکیل شده است:
+</p>
+
+<ul>
+    <li><strong>کلاینت (React App):</strong> رابط کاربری که درخواست‌های MCP ارسال می‌کند</li>
+    <li><strong>سرور MCP (Django/DRF):</strong> واسط که context را مدیریت می‌کند</li>
+    <li><strong>مدل هوش مصنوعی:</strong> موتور اصلی که پاسخ‌ها را تولید می‌کند</li>
+</ul>
+
+<h3>پیاده‌سازی سرور MCP در Django</h3>
+
+<p>
+    ابتدا یک View برای مدیریت درخواست‌های MCP ایجاد می‌کنیم:
+</p>
+
+<pre><code><span class="code-comment"># blog/views.py</span>
+<span class="code-keyword">from</span> rest_framework.decorators <span class="code-keyword">import</span> api_view
+<span class="code-keyword">from</span> rest_framework.response <span class="code-keyword">import</span> Response
+<span class="code-keyword">from</span> rest_framework <span class="code-keyword">import</span> status
+<span class="code-keyword">from</span> django.conf <span class="code-keyword">import</span> settings
+<span class="code-keyword">import</span> json
+<span class="code-keyword">import</span> openai
+
+<span class="code-keyword">class</span> MCPHandler:
+    <span class="code-keyword">def</span> __init__(self):
+        self.openai_client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+    
+    <span class="code-keyword">def</span> process_context(self, context):
+        <span class="code-string">"""
+        پردازش context و تولید پاسخ از مدل هوش مصنوعی
+        """</span>
+        messages = context.get(<span class="code-string">'messages'</span>, [])
+        memory = context.get(<span class="code-string">'memory'</span>, {})
+        tools = context.get(<span class="code-string">'tools'</span>, [])
         
-        response = await self.client.patch(
-            f"{self.api_base_url}/api/posts/{post_id}/",
-            json=data
-        )
-        return response.json()
-    
-    # مدیریت کامنت‌ها
-    @self.server.tool()
-    async def get_post_comments(post_id: int):
-        """دریافت کامنت‌های یک پست"""
-        response = await self.client.get(
-            f"{self.api_base_url}/api/posts/{post_id}/comments/"
-        )
-        return response.json()
-    
-    @self.server.tool()
-    async def moderate_comment(
-        comment_id: int,
-        action: str  # "approve", "reject", "spam"
-    ):
-        """مدیریت کامنت‌ها"""
-        response = await self.client.post(
-            f"{self.api_base_url}/api/comments/{comment_id}/moderate/",
-            json={"action": action}
-        )
-        return response.json()
-    
-    # آمار و تحلیل
-    @self.server.tool()
-    async def get_analytics():
-        """دریافت آمار کلی وبلاگ"""
-        response = await self.client.get(
-            f"{self.api_base_url}/api/analytics/overview/"
-        )
-        return response.json()
-    
-    @self.server.tool()
-    async def get_popular_posts(days: int = 7):
-        """دریافت پست‌های محبوب"""
-        response = await self.client.get(
-            f"{self.api_base_url}/api/analytics/popular/",
-            params={"days": days}
-        )
-        return response.json()
-
-استفاده از سرور
-
-async def main():
-server = AdvancedBlogMCP(“http://localhost:8000”)
-async with stdio_server() as (read_stream, write_stream):
-await server.server.run(
-read_stream,
-write_stream,
-InitializationOptions(
-server_name=“advanced-blog-mcp”,
-server_version=“2.0.0”
-)
-)
-
-if name == “main”:
-asyncio.run(main())
-
-
-
-
-    <div class="content-section">
-        <h2>🔒 امنیت در MCP</h2>
+        <span class="code-comment"># تبدیل memory به system message</span>
+        system_message = self.build_system_message(memory)
         
-        <div class="feature-grid">
-            <div class="feature-card">
-                <h3>احراز هویت</h3>
-                <div class="code-block">
-                    <button class="copy-button" onclick="copyCode(this)">کپی</button>
-                    <pre># استفاده از توکن‌های امن
+        <span class="code-comment"># ایجاد پیام‌های کامل برای ارسال به مدل</span>
+        full_messages = [system_message] + messages
+        
+        <span class="code-comment"># درخواست به مدل</span>
+        response = self.openai_client.chat.completions.create(
+            model=<span class="code-string">"gpt-4"</span>,
+            messages=full_messages,
+            max_tokens=<span class="code-number">1000</span>,
+            temperature=<span class="code-number">0.7</span>
+        )
+        
+        assistant_message = response.choices[<span class="code-number">0</span>].message.content
+        
+        <span class="code-comment"># به‌روزرسانی context</span>
+        updated_context = self.update_context(
+            context, 
+            assistant_message
+        )
+        
+        <span class="code-keyword">return</span> assistant_message, updated_context
+    
+    <span class="code-keyword">def</span> build_system_message(self, memory):
+        <span class="code-string">"""
+        تبدیل اطلاعات memory به یک system message
+        """</span>
+        user_profile = memory.get(<span class="code-string">'user_profile'</span>, {})
+        current_project = memory.get(<span class="code-string">'current_project'</span>, {})
+        
+        system_content = <span class="code-string">f"""
+        شما یک دستیار هوشمند وبلاگ هستید. اطلاعات کاربر:
+        - نام: {user_profile.get('name', 'ناشناس')}
+        - علاقه‌مندی‌ها: {', '.join(user_profile.get('interests', []))}
+        - پروژه فعلی: {current_project.get('type', 'نامشخص')}
+        
+        همیشه به زبان فارسی و با لحنی دوستانه پاسخ دهید.
+        """</span>
+        
+        <span class="code-keyword">return</span> {
+            <span class="code-string">"role"</span>: <span class="code-string">"system"</span>,
+            <span class="code-string">"content"</span>: system_content
+        }
+    
+    <span class="code-keyword">def</span> update_context(self, original_context, assistant_response):
+        <span class="code-string">"""
+        به‌روزرسانی context با پاسخ جدید
+        """</span>
+        updated_context = original_context.copy()
+        
+        <span class="code-comment"># اضافه کردن پاسخ دستیار به پیام‌ها</span>
+        updated_context[<span class="code-string">'messages'</span>].append({
+            <span class="code-string">"role"</span>: <span class="code-string">"assistant"</span>,
+            <span class="code-string">"content"</span>: assistant_response
+        })
+        
+        <span class="code-comment"># به‌روزرسانی metadata</span>
+        <span class="code-keyword">from</span> datetime <span class="code-keyword">import</span> datetime
+        updated_context[<span class="code-string">'metadata'</span>][<span class="code-string">'last_updated'</span>] = datetime.now().isoformat()
+        
+        <span class="code-comment"># محدود کردن تعداد پیام‌ها (برای جلوگیری از اشغال حافظه)</span>
+        <span class="code-keyword">if</span> len(updated_context[<span class="code-string">'messages'</span>]) > <span class="code-number">20</span>:
+            updated_context[<span class="code-string">'messages'</span>] = updated_context[<span class="code-string">'messages'</span>][-<span class="code-number">20</span>:]
+        
+        <span class="code-keyword">return</span> updated_context
 
+<span class="code-comment"># نمونه سراسری handler</span>
+mcp_handler = MCPHandler()
 
-@self.server.tool()
-async def secure_operation(token: str, data: dict):
-if not self.verify_token(token):
-raise PermissionError(“Invalid token”)
-# ادامه عملیات…
+<span class="code-keyword">@api_view</span>([<span class="code-string">'POST'</span>])
+<span class="code-keyword">def</span> mcp_chat_endpoint(request):
+    <span class="code-string">"""
+    End-point اصلی برای دریافت و پردازش درخواست‌های MCP
+    """</span>
+    <span class="code-keyword">try</span>:
+        <span class="code-comment"># دریافت context از درخواست</span>
+        context = request.data.get(<span class="code-string">'context'</span>)
+        <span class="code-keyword">if</span> <span class="code-keyword">not</span> context:
+            <span class="code-keyword">return</span> Response({
+                <span class="code-string">'error'</span>: <span class="code-string">'Context is required'</span>
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        <span class="code-comment"># پردازش context</span>
+        assistant_message, updated_context = mcp_handler.process_context(context)
+        
+        <span class="code-comment"># بازگرداندن پاسخ</span>
+        <span class="code-keyword">return</span> Response({
+            <span class="code-string">'message'</span>: assistant_message,
+            <span class="code-string">'context'</span>: updated_context
+        })
+        
+    <span class="code-keyword">except</span> Exception <span class="code-keyword">as</span> e:
+        <span class="code-keyword">return</span> Response({
+            <span class="code-string">'error'</span>: <span class="code-string">f'خطا در پردازش: {str(e)}'</span>
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)</code></pre>
 
+<h3>پیاده‌سازی کلاینت در React</h3>
 
+<p>
+    حالا بخش کلاینت را پیاده‌سازی می‌کنیم که با سرور MCP تعامل کند:
+</p>
 
-            <div class="feature-card">
-                <h3>محدودیت دسترسی</h3>
-                <div class="code-block">
-                    <button class="copy-button" onclick="copyCode(this)">کپی</button>
-                    <pre># تعریف سطوح دسترسی
+<pre><code><span class="code-comment">// components/MCPChat.jsx</span>
+<span class="code-keyword">import</span> React, { useState, useEffect } <span class="code-keyword">from</span> <span class="code-string">'react'</span>;
+<span class="code-keyword">import</span> axios <span class="code-keyword">from</span> <span class="code-string">'axios'</span>;
 
+<span class="code-keyword">const</span> MCPChat = () => {
+  <span class="code-keyword">const</span> [context, setContext] = useState({
+    messages: [],
+    memory: {
+      user_profile: {
+        name: <span class="code-string">"آراز شاه کرمی"</span>,
+        interests: [<span class="code-string">"Django"</span>, <span class="code-string">"React"</span>, <span class="code-string">"AI"</span>]
+      }
+    },
+    tools: [],
+    metadata: {
+      protocol_version: <span class="code-string">"1.0"</span>,
+      session_id: <span class="code-string">`sess_${Date.now()}`</span>,
+      client_info: {
+        app_name: <span class="code-string">"Araz Blog Assistant"</span>
+      }
+    }
+  });
+  
+  <span class="code-keyword">const</span> [currentMessage, setCurrentMessage] = useState(<span class="code-string">''</span>);
+  <span class="code-keyword">const</span> [isLoading, setIsLoading] = useState(<span class="code-keyword">false</span>);
 
-PERMISSIONS = {
-“read”: [“get_posts”, “search_posts”],
-“write”: [“create_post”, “update_post”],
-“admin”: [“delete_post”, “moderate_comment”]
+  <span class="code-keyword">const</span> sendMessage = <span class="code-keyword">async</span> () => {
+    <span class="code-keyword">if</span> (!currentMessage.trim()) <span class="code-keyword">return</span>;
+    
+    setIsLoading(<span class="code-keyword">true</span>);
+    
+    <span class="code-comment">// اضافه کردن پیام کاربر به context</span>
+    <span class="code-keyword">const</span> newContext = {
+      ...context,
+      messages: [
+        ...context.messages,
+        {
+          role: <span class="code-string">"user"</span>,
+          content: currentMessage
+        }
+      ]
+    };
+    
+    <span class="code-keyword">try</span> {
+      <span class="code-comment">// ارسال درخواست به سرور</span>
+      <span class="code-keyword">const</span> response = <span class="code-keyword">await</span> axios.post(<span class="code-string">'/api/mcp/chat/'</span>, {
+        context: newContext
+      });
+      
+      <span class="code-comment">// به‌روزرسانی context با پاسخ دریافتی</span>
+      setContext(response.data.context);
+      setCurrentMessage(<span class="code-string">''</span>);
+      
+    } <span class="code-keyword">catch</span> (error) {
+      console.error(<span class="code-string">'خطا در ارسال پیام:'</span>, error);
+    } <span class="code-keyword">finally</span> {
+      setIsLoading(<span class="code-keyword">false</span>);
+    }
+  };
+
+  <span class="code-keyword">return</span> (
+    &lt;<span class="code-key">div</span> <span class="code-key">className</span>=<span class="code-string">"mcp-chat"</span>&gt;
+      &lt;<span class="code-key">div</span> <span class="code-key">className</span>=<span class="code-string">"chat-messages"</span>&gt;
+        {context.messages.map((message, index) =&gt; (
+          &lt;<span class="code-key">div</span> <span class="code-key">key</span>={index} <span class="code-key">className</span>=<span class="code-string">{`message ${message.role}`}</span>&gt;
+            &lt;<span class="code-key">strong</span>&gt;{message.role === <span class="code-string">'user'</span> ? <span class="code-string">'شما'</span> : <span class="code-string">'دستیار'</span>}:&lt;/<span class="code-key">strong</span>&gt;
+            &lt;<span class="code-key">p</span>&gt;{message.content}&lt;/<span class="code-key">p</span>&gt;
+          &lt;/<span class="code-key">div</span>&gt;
+        ))}
+      &lt;/<span class="code-key">div</span>&gt;
+      
+      &lt;<span class="code-key">div</span> <span class="code-key">className</span>=<span class="code-string">"chat-input"</span>&gt;
+        &lt;<span class="code-key">textarea</span>
+          <span class="code-key">value</span>={currentMessage}
+          <span class="code-key">onChange</span>={(e) =&gt; setCurrentMessage(e.target.value)}
+          <span class="code-key">placeholder</span>=<span class="code-string">"پیام خود را بنویسید..."</span>
+          <span class="code-key">disabled</span>={isLoading}
+        /&gt;
+        &lt;<span class="code-key">button</span> <span class="code-key">onClick</span>={sendMessage} <span class="code-key">disabled</span>={isLoading}&gt;
+          {isLoading ? <span class="code-string">'در حال ارسال...'</span> : <span class="code-string">'ارسال'</span>}
+        &lt;/<span class="code-key">button</span>&gt;
+      &lt;/<span class="code-key">div</span>&gt;
+    &lt;/<span class="code-key">div</span>&gt;
+  );
+};
+
+<span class="code-keyword">export default</span> MCPChat;</code></pre>
+
+<h2 id="examples">فصل پنجم: مثال‌های کاربردی</h2>
+
+<p>
+    در این بخش، چندین مثال عملی از استفاده MCP در سناریوهای مختلف ارائه می‌دهیم. این مثال‌ها نشان می‌دهند که چگونه
+    می‌توان از قدرت MCP برای ایجاد تجربه‌های کاربری پیشرفته استفاده کرد.
+</p>
+
+<h3>مثال ۱: دستیار نوشتن مقاله چندمرحله‌ای</h3>
+
+<p>
+    فرض کنید کاربر می‌خواهد یک مقاله کامل درباره Django REST Framework بنویسد. این فرآیند شامل چندین مرحله است:
+</p>
+
+<div class="info-box">
+    <strong>سناریو:</strong> کاربر می‌خواهد یک مقاله جامع درباره DRF بنویسد. دستیار باید او را در تمام مراحل از
+    ایده‌پردازی تا انتشار راهنمایی کند.
+</div>
+
+<h4>مرحله ۱: ایده‌پردازی و طرح کلی</h4>
+
+<pre><code><span class="code-comment">// درخواست اولیه کاربر</span>
+{
+  <span class="code-key">"context"</span>: {
+    <span class="code-key">"messages"</span>: [
+      {
+        <span class="code-key">"role"</span>: <span class="code-string">"user"</span>,
+        <span class="code-key">"content"</span>: <span class="code-string">"سلام! می‌خواهم یک مقاله جامع درباره Django REST Framework بنویسم. کمکم کنی؟"</span>
+      }
+    ],
+    <span class="code-key">"memory"</span>: {
+      <span class="code-key">"user_profile"</span>: {
+        <span class="code-key">"name"</span>: <span class="code-string">"آراز شاه کرمی"</span>,
+        <span class="code-key">"expertise_level"</span>: <span class="code-string">"intermediate"</span>,
+        <span class="code-key">"interests"</span>: [<span class="code-string">"Django"</span>, <span class="code-string">"DRF"</span>, <span class="code-string">"API Development"</span>]
+      },
+      <span class="code-key">"writing_preferences"</span>: {
+        <span class="code-key">"style"</span>: <span class="code-string">"practical_with_examples"</span>,
+        <span class="code-key">"target_audience"</span>: <span class="code-string">"intermediate_developers"</span>
+      }
+    }
+  }
+}</code></pre>
+
+<p>
+    پس از دریافت این درخواست، سرور MCP پاسخی تولید می‌کند و حافظه را با اطلاعات پروژه جدید به‌روز می‌کند:
+</p>
+
+<pre><code><span class="code-comment">// پاسخ سرور با context به‌روز شده</span>
+{
+  <span class="code-key">"message"</span>: <span class="code-string">"سلام آراز جان! خوشحالم که می‌خوای درباره DRF بنویسی. بیا با هم یک طرح جامع تهیه کنیم..."</span>,
+  <span class="code-key">"context"</span>: {
+    <span class="code-key">"messages"</span>: [...],
+    <span class="code-key">"memory"</span>: {
+      <span class="code-key">"user_profile"</span>: {...},
+      <span class="code-key">"current_article"</span>: {
+        <span class="code-key">"topic"</span>: <span class="code-string">"Django REST Framework"</span>,
+        <span class="code-key">"status"</span>: <span class="code-string">"planning"</span>,
+        <span class="code-key">"target_length"</span>: <span class="code-string">"comprehensive"</span>,
+        <span class="code-key">"outline"</span>: [
+          <span class="code-string">"مقدمه و معرفی DRF"</span>,
+          <span class="code-string">"نصب و راه‌اندازی"</span>,
+          <span class="code-string">"Serializers و کاربردهای آن"</span>,
+          <span class="code-string">"ViewSets و Routers"</span>,
+          <span class="code-string">"احراز هویت و مجوزها"</span>,
+          <span class="code-string">"مثال عملی: ساخت API کامل"</span>
+        ]
+      }
+    }
+  }
+}</code></pre>
+
+<h4>مرحله ۲: نوشتن بخش‌های مختلف</h4>
+
+<p>
+    در ادامه، کاربر می‌تواند درخواست نوشتن هر بخش را داشته باشد و دستیار با استفاده از اطلاعات ذخیره شده در
+    <code>memory</code>، بخش‌های مناسب و مرتبط تولید کند.
+</p>
+
+<h3>مثال ۲: سیستم مدیریت وظایف هوشمند</h3>
+
+<p>
+    یکی از کاربردهای قدرتمند MCP، ایجاد یک سیستم مدیریت وظایف است که بتواند وظایف پیچیده و چندمرحله‌ای را پیگیری کند.
+</p>
+
+<pre><code><span class="code-comment">// مثال context برای مدیریت وظایف</span>
+{
+  <span class="code-key">"context"</span>: {
+    <span class="code-key">"memory"</span>: {
+      <span class="code-key">"active_tasks"</span>: [
+        {
+          <span class="code-key">"id"</span>: <span class="code-number">1</span>,
+          <span class="code-key">"title"</span>: <span class="code-string">"پیاده‌سازی API احراز هویت"</span>,
+          <span class="code-key">"status"</span>: <span class="code-string">"in_progress"</span>,
+          <span class="code-key">"subtasks"</span>: [
+            {<span class="code-key">"name"</span>: <span class="code-string">"طراحی مدل User"</span>, <span class="code-key">"completed"</span>: <span class="code-bool">true</span>},
+            {<span class="code-key">"name"</span>: <span class="code-string">"پیاده‌سازی JWT"</span>, <span class="code-key">"completed"</span>: <span class="code-bool">false</span>},
+            {<span class="code-key">"name"</span>: <span class="code-string">"تست‌نویسی"</span>, <span class="code-key">"completed"</span>: <span class="code-bool">false</span>}
+          ],
+          <span class="code-key">"priority"</span>: <span class="code-string">"high"</span>,
+          <span class="code-key">"deadline"</span>: <span class="code-string">"2024-10-15"</span>
+        }
+      ],
+      <span class="code-key">"completed_tasks"</span>: [
+        {
+          <span class="code-key">"id"</span>: <span class="code-number">0</span>,
+          <span class="code-key">"title"</span>: <span class="code-string">"راه‌اندازی پروژه Django"</span>,
+          <span class="code-key">"completed_date"</span>: <span class="code-string">"2024-10-01"</span>
+        }
+      ]
+    }
+  }
+}</code></pre>
+
+<h2 id="best-practices">فصل ششم: بهترین شیوه‌ها</h2>
+
+<p>
+    استفاده موثر از MCP نیازمند رعایت برخی اصول و بهترین شیوه‌هاست. در این بخش، مهم‌ترین نکات و توصیه‌ها را بررسی
+    می‌کنیم.
+</p>
+
+<h3>۱. مدیریت اندازه Context</h3>
+
+<div class="warning-box">
+    <strong>نکته مهم:</strong> Context نباید خیلی بزرگ شود. مدل‌های زبانی محدودیت‌هایی در تعداد توکن‌های ورودی دارند.
+</div>
+
+<p>
+    برای مدیریت اندازه context، استراتژی‌های زیر را پیشنهاد می‌کنیم:
+</p>
+
+<ul>
+    <li><strong>محدود کردن تعداد پیام‌ها:</strong> فقط آخرین ۱۰-۲۰ پیام را نگه دارید</li>
+    <li><strong>فشرده‌سازی حافظه:</strong> اطلاعات قدیمی را خلاصه کنید</li>
+<li><strong>حذف اطلاعات غیرضروری:</strong> metadata و اطلاعات جانبی را به حداقل برسانید</li>
+</ul>
+
+<pre><code><span class="code-comment"># مثال تابع مدیریت اندازه context</span>
+<span class="code-keyword">def</span> optimize_context_size(context, max_messages=<span class="code-number">15</span>):
+    <span class="code-string">"""
+    بهینه‌سازی اندازه context برای جلوگیری از اشغال حافظه زیاد
+    """</span>
+    optimized_context = context.copy()
+    
+    <span class="code-comment"># محدود کردن تعداد پیام‌ها</span>
+    messages = optimized_context.get(<span class="code-string">'messages'</span>, [])
+    <span class="code-keyword">if</span> len(messages) > max_messages:
+        <span class="code-comment"># حفظ پیام system و آخرین پیام‌ها</span>
+        system_messages = [m <span class="code-keyword">for</span> m <span class="code-keyword">in</span> messages <span class="code-keyword">if</span> m[<span class="code-string">'role'</span>] == <span class="code-string">'system'</span>]
+        recent_messages = messages[-(max_messages-len(system_messages)):]
+        optimized_context[<span class="code-string">'messages'</span>] = system_messages + recent_messages
+    
+    <span class="code-comment"># فشرده‌سازی memory</span>
+    memory = optimized_context.get(<span class="code-string">'memory'</span>, {})
+    <span class="code-keyword">if</span> <span class="code-string">'conversation_summary'</span> <span class="code-keyword">not</span> <span class="code-keyword">in</span> memory:
+        memory[<span class="code-string">'conversation_summary'</span>] = summarize_old_messages(messages[:-max_messages])
+    
+    <span class="code-keyword">return</span> optimized_context</code></pre>
+
+<h3>۲. امنیت و حریم خصوصی</h3>
+
+<p>
+    از آنجایی که context حاوی اطلاعات حساس کاربران است، رعایت اصول امنیتی بسیار مهم است:
+</p>
+
+<h4>رمزگذاری اطلاعات</h4>
+<pre><code><span class="code-comment"># مثال رمزگذاری memory قبل از ذخیره</span>
+<span class="code-keyword">from</span> cryptography.fernet <span class="code-keyword">import</span> Fernet
+<span class="code-keyword">import</span> json
+
+<span class="code-keyword">class</span> SecureContextManager:
+    <span class="code-keyword">def</span> __init__(self, encryption_key):
+        self.cipher = Fernet(encryption_key)
+    
+    <span class="code-keyword">def</span> encrypt_memory(self, memory):
+        <span class="code-string">"""رمزگذاری اطلاعات حساس در memory"""</span>
+        memory_json = json.dumps(memory, ensure_ascii=<span class="code-keyword">False</span>)
+        encrypted_memory = self.cipher.encrypt(memory_json.encode())
+        <span class="code-keyword">return</span> encrypted_memory
+    
+    <span class="code-keyword">def</span> decrypt_memory(self, encrypted_memory):
+        <span class="code-string">"""رمزگشایی اطلاعات memory"""</span>
+        decrypted_json = self.cipher.decrypt(encrypted_memory).decode()
+        <span class="code-keyword">return</span> json.loads(decrypted_json)</code></pre>
+
+<h4>اعتبارسنجی ورودی</h4>
+<pre><code><span class="code-comment"># اعتبارسنجی ساختار context</span>
+<span class="code-keyword">from</span> cerberus <span class="code-keyword">import</span> Validator
+
+context_schema = {
+    <span class="code-string">'messages'</span>: {
+        <span class="code-string">'type'</span>: <span class="code-string">'list'</span>,
+        <span class="code-string">'required'</span>: <span class="code-keyword">True</span>,
+        <span class="code-string">'schema'</span>: {
+            <span class="code-string">'type'</span>: <span class="code-string">'dict'</span>,
+            <span class="code-string">'schema'</span>: {
+                <span class="code-string">'role'</span>: {<span class="code-string">'type'</span>: <span class="code-string">'string'</span>, <span class="code-string">'allowed'</span>: [<span class="code-string">'user'</span>, <span class="code-string">'assistant'</span>, <span class="code-string">'system'</span>]},
+                <span class="code-string">'content'</span>: {<span class="code-string">'type'</span>: <span class="code-string">'string'</span>, <span class="code-string">'maxlength'</span>: <span class="code-number">5000</span>}
+            }
+        }
+    },
+    <span class="code-string">'memory'</span>: {<span class="code-string">'type'</span>: <span class="code-string">'dict'</span>, <span class="code-string">'required'</span>: <span class="code-keyword">False</span>},
+    <span class="code-string">'tools'</span>: {<span class="code-string">'type'</span>: <span class="code-string">'list'</span>, <span class="code-string">'required'</span>: <span class="code-keyword">False</span>},
+    <span class="code-string">'metadata'</span>: {<span class="code-string">'type'</span>: <span class="code-string">'dict'</span>, <span class="code-string">'required'</span>: <span class="code-keyword">False</span>}
 }
 
+<span class="code-keyword">def</span> validate_context(context):
+    validator = Validator(context_schema)
+    <span class="code-keyword">return</span> validator.validate(context), validator.errors</code></pre>
 
+<h3>۳. بهینه‌سازی عملکرد</h3>
 
+<p>
+    برای بهبود عملکرد سیستم MCP، تکنیک‌های زیر را پیشنهاد می‌کنیم:
+</p>
 
-        <div class="tip-box">
-            همیشه از HTTPS برای ارتباطات شبکه‌ای استفاده کنید و هرگز اطلاعات حساس را در لاگ‌ها ذخیره نکنید!
-        </div>
-    </div>
+<h4>استفاده از Cache</h4>
+<pre><code><span class="code-comment"># پیاده‌سازی cache برای context های مشابه</span>
+<span class="code-keyword">from</span> django.core.cache <span class="code-keyword">import</span> cache
+<span class="code-keyword">import</span> hashlib
 
-    <div class="content-section">
-        <h2>🚀 بهترین روش‌ها و نکات پیشرفته</h2>
-        
-        <h3>1. مدیریت خطا</h3>
-        <div class="code-block">
-            <button class="copy-button" onclick="copyCode(this)">کپی</button>
-            <pre>@self.server.tool()
+<span class="code-keyword">def</span> get_context_hash(context):
+    <span class="code-string">"""تولید hash منحصربه‌فرد برای context"""</span>
+    context_str = json.dumps(context, sort_keys=<span class="code-keyword">True</span>)
+    <span class="code-keyword">return</span> hashlib.md5(context_str.encode()).hexdigest()
 
-
-async def safe_operation(param: str):
-try:
-result = await risky_operation(param)
-return {“success”: True, “data”: result}
-except ValidationError as e:
-return {“success”: False, “error”: f"Validation failed: {e}“}
-except Exception as e:
-logger.error(f"Unexpected error: {e}”)
-return {“success”: False, “error”: “Internal server error”}
-
-
-        <h3>2. کش کردن نتایج</h3>
-        <div class="code-block">
-            <button class="copy-button" onclick="copyCode(this)">کپی</button>
-            <pre>from functools import lru_cache
-
-
-import time
-
-class CachedMCPServer:
-def init(self):
-self.cache = {}
-self.cache_ttl = 300  # 5 minutes
-
-@self.server.tool()
-async def get_cached_data(key: str):
-    if key in self.cache:
-        data, timestamp = self.cache[key]
-        if time.time() - timestamp < self.cache_ttl:
-            return data
+<span class="code-keyword">def</span> cached_ai_response(context):
+    <span class="code-string">"""دریافت پاسخ با استفاده از cache"""</span>
+    context_hash = get_context_hash(context)
+    cached_response = cache.get(<span class="code-string">f'ai_response_{context_hash}'</span>)
     
-    # Fetch fresh data
-    data = await fetch_data(key)
-    self.cache[key] = (data, time.time())
-    return data</pre>
-        </div>
+    <span class="code-keyword">if</span> cached_response:
+        <span class="code-keyword">return</span> cached_response
+    
+    <span class="code-comment"># در صورت عدم وجود در cache، پاسخ جدید تولید کن</span>
+    response = generate_ai_response(context)
+    cache.set(<span class="code-string">f'ai_response_{context_hash}'</span>, response, timeout=<span class="code-number">3600</span>)  <span class="code-comment"># یک ساعت</span>
+    
+    <span class="code-keyword">return</span> response</code></pre>
 
-        <h3>3. مانیتورینگ و لاگ</h3>
-        <div class="code-block">
-            <button class="copy-button"
-                    onclick="copyCode(this)">کپی</button>
-            <pre>import logging
+<h4>پردازش ناهمزمان</h4>
+<pre><code><span class="code-comment"># استفاده از Celery برای پردازش ناهمزمان</span>
+<span class="code-keyword">from</span> celery <span class="code-keyword">import</span> shared_task
+<span class="code-keyword">from</span> channels.layers <span class="code-keyword">import</span> get_channel_layer
+<span class="code-keyword">from</span> asgiref.sync <span class="code-keyword">import</span> async_to_sync
 
-
-from datetime import datetime
-
-تنظیم لاگر
-
-logging.basicConfig(
-level=logging.INFO,
-format=‘%(asctime)s - %(name)s - %(levelname)s - %(message)s’
-)
-logger = logging.getLogger(‘mcp_server’)
-
-@self.server.tool()
-async def monitored_operation(params: dict):
-start_time = datetime.now()
-logger.info(f"Starting operation with params: {params}")
-
-try:
-    result = await perform_operation(params)
-    duration = (datetime.now() - start_time).total_seconds()
-    logger.info(f"Operation completed in {duration}s")
-    return result
-except Exception as e:
-    logger.error(f"Operation failed: {e}")
-    raise</pre>
-        </div>
-    </div>
-
-    <div class="content-section">
-        <h2>📚 منابع و مستندات</h2>
-
-        <div class="feature-grid">
-            <div class="feature-card">
-                <h3>🔗 لینک‌های مفید</h3>
-                <ul>
-                    <li><a href="https://github.com/anthropics/mcp"
-                           target="_blank">مخزن رسمی MCP</a></li>
-                    <li><a href="https://modelcontextprotocol.io"
-                           target="_blank">مستندات کامل</li>
-                </ul>
-            </div>
-
-            <div class="feature-card">
-                <h3>📖 مطالعه بیشتر</h3>
-                <ul>
-                    <li>راهنمای توسعه پلاگین‌ها</li>
-                    <li>بهینه‌سازی عملکرد MCP</li>
-                    <li>یکپارچه‌سازی با سیستم‌های موجود</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <div class="content-section"
-         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-        <h2 style="color: white; border-bottom-color: white;">🎯 جمع‌بندی</h2>
-        <p>MCP یک گام بزرگ در جهت استانداردسازی نحوه تعامل LLM‌ها با دنیای واقعی است. با استفاده از این پروتکل،
-            می‌توانید:</p>
-        <ul>
-            <li>✅ به Claude و سایر LLM‌ها امکان دسترسی امن به داده‌های شما را بدهید</li>
-            <li>✅ ابزارهای قدرتمند برای اتوماسیون و تحلیل بسازید</li>
-            <li>✅ تجربه کاربری بهتری برای کاربران نهایی فراهم کنید</li>
-            <li>✅ از استانداردهای باز و قابل توسعه استفاده کنید</li>
-        </ul>
-
-        <div style="text-align: center; margin-top: 30px;">
-            <p style="font-size: 1.2em;">آماده‌اید تا اولین سرور MCP خود را بسازید؟ 🚀</p>
-        </div>
-    </div>
-
-        <!-- Footer Section -->
-        <footer class="footer">
-            <h3>درباره نویسنده</h3>
-            <div class="author-info">
-                <p>این راهنما توسط <strong>آراز شاه کرمی</strong> تهیه شده است. من یک توسعه‌دهنده وب و علاقه‌مند به تکنولوژی‌های
-                    نوین هستم که به دنبال خلق ابزارها و راهکارهای نوآورانه هستم.</p>
-                <p>برای مشاهده پروژه‌ها و ارتباط با من، لطفاً به وب‌سایت شخصی من مراجعه کنید:</p>
-                <a href="https://araz.me"
-                   target="_blank"
-                   class="website-link">🌐 وب‌سایت من: araz.me</a>
-            </div>
-        </footer>
-        </div>
+<span class="code-keyword">@shared_task</span>
+<span class="code-keyword">def</span> process_mcp_request_async(context, user_id, session_id):
+    <span class="code-string">"""پردازش ناهمزمان درخواست MCP"""</span>
+    <span class="code-keyword">try</span>:
+        response, updated_context = mcp_handler.process_context(context)
         
-        <script>
-            // Progress bar functionality
-            window.addEventListener('scroll', () => {
-                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                const scrolled = (winScroll / height) * 100;
-                document.getElementById('progressBar').style.height = scrolled + '%';
-            });
-
-            // Copy code functionality
-            function copyCode(button) {
-                const codeBlock = button.parentElement.querySelector('pre');
-                const text = codeBlock.textContent;
-
-                navigator.clipboard.writeText(text).then(() => {
-                    const originalText = button.textContent;
-                    button.textContent = 'کپی شد! ✓';
-                    button.style.background = '#28a745';
-
-                    setTimeout(() => {
-                        button.textContent = originalText;
-                        button.style.background = '#667eea';
-                    }, 2000);
-                });
+        <span class="code-comment"># ارسال نتیجه از طریق WebSocket</span>
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            <span class="code-string">f'user_{user_id}'</span>,
+            {
+                <span class="code-string">'type'</span>: <span class="code-string">'mcp_response'</span>,
+                <span class="code-string">'message'</span>: response,
+                <span class="code-string">'context'</span>: updated_context,
+                <span class="code-string">'session_id'</span>: session_id
             }
-        </script>
-        </body>
+        )
+    <span class="code-keyword">except</span> Exception <span class="code-keyword">as</span> e:
+        <span class="code-comment"># مدیریت خطا</span>
+        async_to_sync(channel_layer.group_send)(
+            <span class="code-string">f'user_{user_id}'</span>,
+            {
+                <span class="code-string">'type'</span>: <span class="code-string">'mcp_error'</span>,
+                <span class="code-string">'error'</span>: str(e),
+                <span class="code-string">'session_id'</span>: session_id
+            }
+        )</code></pre>
+
+<h3>۴. مدیریت خطا و بازیابی</h3>
+
+<p>
+    یک سیستم MCP قوی باید قادر به مدیریت خطاها و بازیابی از حالات غیرمنتظره باشد:
+</p>
+
+<pre><code><span class="code-keyword">class</span> MCPErrorHandler:
+    <span class="code-keyword">def</span> __init__(self):
+        self.backup_contexts = {}
+    
+    <span class="code-keyword">def</span> create_backup(self, session_id, context):
+        <span class="code-string">"""ایجاد backup از context"""</span>
+        self.backup_contexts[session_id] = {
+            <span class="code-string">'context'</span>: context.copy(),
+            <span class="code-string">'timestamp'</span>: datetime.now()
+        }
+    
+    <span class="code-keyword">def</span> restore_from_backup(self, session_id):
+        <span class="code-string">"""بازیابی context از backup"""</span>
+        backup = self.backup_contexts.get(session_id)
+        <span class="code-keyword">if</span> backup:
+            <span class="code-keyword">return</span> backup[<span class="code-string">'context'</span>]
+        <span class="code-keyword">return</span> <span class="code-keyword">None</span>
+    
+    <span class="code-keyword">def</span> handle_corrupted_context(self, context):
+        <span class="code-string">"""مدیریت context های خراب"""</span>
+        <span class="code-comment"># بررسی ساختار اساسی</span>
+        <span class="code-keyword">if</span> <span class="code-keyword">not</span> isinstance(context, dict):
+            <span class="code-keyword">return</span> self.create_default_context()
         
-        </html>
+        <span class="code-comment"># تعمیر بخش‌های خراب</span>
+        <span class="code-keyword">if</span> <span class="code-string">'messages'</span> <span class="code-keyword">not</span> <span class="code-keyword">in</span> context:
+            context[<span class="code-string">'messages'</span>] = []
+        
+        <span class="code-keyword">if</span> <span class="code-string">'memory'</span> <span class="code-keyword">not</span> <span class="code-keyword">in</span> context:
+            context[<span class="code-string">'memory'</span>] = {}
+        
+        <span class="code-keyword">return</span> context
+    
+    <span class="code-keyword">def</span> create_default_context(self):
+        <span class="code-string">"""ایجاد context پیش‌فرض"""</span>
+        <span class="code-keyword">return</span> {
+            <span class="code-string">'messages'</span>: [],
+            <span class="code-string">'memory'</span>: {},
+            <span class="code-string">'tools'</span>: [],
+            <span class="code-string">'metadata'</span>: {
+                <span class="code-string">'protocol_version'</span>: <span class="code-string">'1.0'</span>,
+                <span class="code-string">'created_at'</span>: datetime.now().isoformat()
+            }
+        }</code></pre>
+
+<h2 id="future">فصل هفتم: آینده MCP</h2>
+
+<p>
+    پروتکل زمینه مدل هنوز در مراحل اولیه توسعه قرار دارد و آینده‌ای روشن پیش رو دارد. در این بخش، نگاهی به روندهای آینده
+    و امکانات جدیدی که در راه هستند، خواهیم انداخت.
+</p>
+
+<h3>۱. یکپارچگی با مدل‌های جدید</h3>
+
+<p>
+    با ظهور مدل‌های زبانی پیشرفته‌تر و قابلیت‌های جدید مانند multimodal AI، MCP نیز باید تکامل یابد. انتظار می‌رود
+    نسخه‌های آینده از ویژگی‌های زیر پشتیبانی کنند:
+</p>
+
+<ul>
+    <li><strong>پشتیبانی از محتوای چندرسانه‌ای:</strong> تصاویر، صوت، و ویدیو در context</li>
+    <li><strong>حافظه بصری:</strong> ذخیره و بازیابی اطلاعات بصری</li>
+    <li><strong>تعامل صوتی:</strong> مدیریت مکالمات صوتی طولانی</li>
+</ul>
+
+<pre><code><span class="code-comment">// نمونه context آینده با پشتیبانی multimodal</span>
+{
+  <span class="code-key">"context"</span>: {
+    <span class="code-key">"messages"</span>: [
+      {
+        <span class="code-key">"role"</span>: <span class="code-string">"user"</span>,
+        <span class="code-key">"content"</span>: [
+          {<span class="code-key">"type"</span>: <span class="code-string">"text"</span>, <span class="code-key">"text"</span>: <span class="code-string">"این تصویر را تحلیل کن"</span>},
+          {<span class="code-key">"type"</span>: <span class="code-string">"image"</span>, <span class="code-key">"image_url"</span>: <span class="code-string">"data:image/jpeg;base64,..."</span>}
+        ]
+      }
+    ],
+    <span class="code-key">"memory"</span>: {
+      <span class="code-key">"visual_memory"</span>: [
+        {
+          <span class="code-key">"image_id"</span>: <span class="code-string">"img_001"</span>,
+          <span class="code-key">"description"</span>: <span class="code-string">"نمودار معماری سیستم Django"</span>,
+          <span class="code-key">"tags"</span>: [<span class="code-string">"architecture"</span>, <span class="code-string">"django"</span>]
+        }
+      ]
+    }
+  }
+}</code></pre>
+
+<h3>۲. استانداردسازی صنعتی</h3>
+
+<p>
+    یکی از اهداف اصلی MCP، تبدیل شدن به یک استاندارد صنعتی است. این امر مزایای زیادی برای توسعه‌دهندگان و کاربران نهایی
+    خواهد داشت:
+</p>
+
+<div class="tip-box">
+    <strong>چشم‌انداز آینده:</strong> تصور کنید دنیایی که تمام ابزارهای هوش مصنوعی با یک پروتکل واحد کار می‌کنند. شما
+    می‌توانید context خود را از ChatGPT به Claude و سپس به Gemini منتقل کنید بدون اینکه هیچ اطلاعاتی از دست بدهید.
+</div>
+
+<h3>۳. ابزارهای توسعه پیشرفته</h3>
+
+<p>
+    در آینده، انتظار می‌رود ابزارهای قدرتمندی برای توسعه و اشکال‌زدایی سیستم‌های MCP ارائه شوند:
+</p>
+
+<ul>
+    <li><strong>MCP Debugger:</strong> ابزار بصری برای ردیابی تغییرات context</li>
+    <li><strong>Context Visualizer:</strong> نمایش گرافیکی ساختار و روابط در context</li>
+    <li><strong>Performance Profiler:</strong> تحلیل عملکرد و بهینه‌سازی خودکار</li>
+</ul>
+
+<h3>۴. یادگیری تطبیقی</h3>
+
+<p>
+    یکی از جذاب‌ترین امکانات آینده، قابلیت یادگیری تطبیقی است. سیستم‌های MCP آینده خواهند توانست:
+</p>
+
+<ul>
+    <li>الگوهای رفتاری کاربران را تشخیص دهند</li>
+    <li>Context را به صورت خودکار بهینه‌سازی کنند</li>
+    <li>پیش‌بینی کنند که کاربر بعداً به چه اطلاعاتی نیاز خواهد داشت</li>
+</ul>
+
+<div class="info-box">
+    <strong>نکته مهم:</strong> تمام این پیشرفت‌ها باید با رعایت کامل حریم خصوصی و امنیت کاربران همراه باشد. یادگیری
+    تطبیقی نباید به معنای نقض حریم خصوصی باشد.
+</div>
+
+<h2>نتیجه‌گیری و جمع‌بندی</h2>
+
+<p>
+    در این کتاب، سفری جامع به دنیای پروتکل زمینه مدل (MCP) داشتیم. از مفاهیم پایه گرفته تا پیاده‌سازی‌های پیشرفته، تمام
+    جنبه‌های این فناوری نوظهور را بررسی کردیم.
+</p>
+
+<p>
+    MCP نه تنها یک راه‌حل فنی برای مشکل حافظه در هوش مصنوعی است، بلکه دریچه‌ای به سوی آینده‌ای است که در آن تعامل با
+    ماشین‌ها طبیعی‌تر، هوشمندتر، و انسانی‌تر خواهد بود. با درک صحیح این پروتکل و پیاده‌سازی درست آن، می‌توانیم تجربه‌های
+    کاربری بی‌نظیری خلق کنیم.
+</p>
+
+<p>
+    امیدوارم این کتاب راهنمای مفیدی برای شروع سفر شما با MCP باشد. به یاد داشته باشید که این فناوری هنوز در حال تکامل
+    است و هر روز امکانات جدیدی به آن اضافه می‌شود. پیشنهاد می‌کنم همیشه با آخرین تطورات این حوزه همگام بمانید.
+</p>
+
+<div class="book-footer">
+    <p>
+        <strong>برای اطلاعات بیشتر و آخرین به‌روزرسانی‌ها:</strong><br>
+        🌐 <a href="https://araz.me">araz.me</a><br>
+        📧 <a href="https://modelcontextprotocol.ir">modelcontextprotocol.ir</a>
+    </p>
+
+    <p style="margin-top: 40px; font-style: italic; color: var(--accent-green);">
+        "آینده متعلق به کسانی است که امروز آن را می‌سازند"
+    </p>
+
+    <p style="margin-top: 20px;">
+        <strong>آراز شاه کرمی</strong><br>
+        مهر ۱۴۰۳
+    </p>
+</div>
+
+<div class="page-number">صفحه ۱ از ۱</div>
+</div>
+</div>
+
+</body>
+
+</html>
