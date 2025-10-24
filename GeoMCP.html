@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آموزش MCP در GIS - دوره کامل</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: white;
+            padding: 40px 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-tabs button {
+            padding: 12px 25px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            color: #667eea;
+            transition: all 0.3s;
+        }
+        
+        .nav-tabs button:hover,
+        .nav-tabs button.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .content-section {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .code-block {
+            background: #f4f4f4;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-right: 4px solid #ffc107;
+        }
+        
+        .success {
+            background: #d4edda;
+            border-right-color: #28a745;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            border-right-color: #17a2b8;
+        }
+        
+        ul, ol {
+            margin-right: 30px;
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 10px;
+        }
+        
+        .example-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        
+        .diagram {
+            text-align: center;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        table th, table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        table th {
+            background: #667eea;
+            color: white;
+        }
+        
+        table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🗺️ آموزش جامع MCP در GIS</h1>
+            <p>یادگیری Model Context Protocol برای سیستم‌های اطلاعات جغرافیایی</p>
+        </header>
+        
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="showTab('intro')">مقدمه</button>
+            <button class="tab-btn" onclick="showTab('basics')">مبانی MCP</button>
+            <button class="tab-btn" onclick="showTab('gis-integration')">ادغام با GIS</button>
+            <button class="tab-btn" onclick="showTab('geojson')">GeoJSON</button>
+            <button class="tab-btn" onclick="showTab('practical')">مثال عملی</button>
+            <button class="tab-btn" onclick="showTab('advanced')">موارد پیشرفته</button>
+            <button class="tab-btn" onclick="showTab('resources')">منابع</button>
+        </div>
+        
+        <!-- بخش مقدمه -->
+        <div id="intro" class="content-section active">
+            <h2>📚 مقدمه به MCP و GIS</h2>
+            
+            <h3>MCP چیست؟</h3>
+            <p>
+                <strong>Model Context Protocol (MCP)</strong> یک پروتکل استاندارد است که برای ارتباط بین مدل‌های هوش مصنوعی و ابزارهای خارجی طراحی شده است.
+            </p>
+            
+            <div class="highlight info">
+                <strong>💡 نکته مهم:</strong> MCP به مدل‌های AI اجازه می‌دهد تا به منابع داده، ابزارها و خدمات خارجی دسترسی داشته باشند.
+            </div>
+            
+            <h3>GIS چیست؟</h3>
+            <p>
+                <strong>Geographic Information System (GIS)</strong> سیستمی است برای جمع‌آوری، تجزیه‌تحلیل و نمایش داده‌های جغرافیایی.
+            </p>
+            
+            <h3>چرا ترکیب MCP و GIS؟</h3>
+            <ul>
+                <li>📍 دسترسی خودکار به داده‌های جغرافیایی</li>
+                <li>🤖 تحلیل هوشمند مکان‌های جغرافیایی</li>
+                <li>🔄 خودکارسازی فرآیندهای GIS</li>
+                <li>📊 تولید گزارش‌های جغرافیایی</li>
+                <li>🗺️ تولید نقشه‌های تعاملی</li>
+            </ul>
+            
+            <div class="diagram">
+                <pre>
+┌─────────────────────────────────────────┐
+│      ChatGPT / Claude (AI Model)        │
+└──────────────────┬──────────────────────┘
+                   │
+                   │ MCP Protocol
+                   ▼
+┌─────────────────────────────────────────┐
+│      GIS Services & Tools               │
+│  - Geocoding, Mapping, Analysis         │
+└─────────────────────────────────────────┘
+                   │
+                   ▼
+┌─────────────────────────────────────────┐
+│      Geographic Data Sources            │
+│  - GeoJSON, Shapefiles, Databases       │
+└─────────────────────────────────────────┘
+                </pre>
+            </div>
+        </div>
+        
+        <!-- بخش مبانی MCP -->
+        <div id="basics" class="content-section">
+            <h2>🔧 مبانی MCP</h2>
+            
+            <h3>معماری MCP</h3>
+            <p>MCP بر اساس معماری Client-Server کار می‌کند:</p>
+            
+            <table>
+                <tr>
+                    <th>مؤلفه</th>
+                    <th>توضیح</th>
+                    <th>مثال</th>
+                </tr>
+                <tr>
+                    <td><strong>Client</strong></td>
+                    <td>مدل AI که درخواست ارسال می‌کند</td>
+                    <td>ChatGPT, Claude</td>
+                </tr>
+                <tr>
+                    <td><strong>Server</strong></td>
+                    <td>سرویس GIS که درخواست را پردازش می‌کند</td>
+                    <td>ArcGIS, QGIS Server</td>
+                </tr>
+                <tr>
+                    <td><strong>Protocol</strong></td>
+                    <td>زبان ارتباط استاندارد</td>
+                    <td>JSON-RPC over HTTP/WebSocket</td>
+                </tr>
+            </table>
+            
+            <h3>اجزای اصلی MCP</h3>
+            
+            <h4><span class="step-number">1</span>Resources</h4>
+            <p>منابع داده‌ای که سرور MCP فراهم می‌کند:</p>
+            <div class="code-block">
+{
+  "type": "resource",
+  "name": "map_data",
+  "description": "داده‌های نقشه جغرافیایی",
+  "mimeType": "application/geo+json"
+}
+            </div>
+            
+            <h4><span class="step-number">2</span>Tools</h4>
+            <p>ابزارهایی که سرور فراهم می‌کند:</p>
+            <div class="code-block">
+{
+  "type": "tool",
+  "name": "geocode",
+  "description": "تبدیل آدرس به مختصات",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "address": {"type": "string"}
+    }
+  }
+}
+            </div>
+            
+            <h4><span class="step-number">3</span>Prompts</h4>
+            <p>الگوهای پیش‌تعریف‌شده برای تعاملات:</p>
+            <div class="code-block">
+{
+  "type": "prompt",
+  "name": "analyze_region",
+  "description": "تحلیل منطقه جغرافیایی",
+  "arguments": [
+    {"name": "region", "description": "نام منطقه"}
+  ]
+}
+            </div>
+        </div>
+        
+        <!-- بخش ادغام با GIS -->
+        <div id="gis-integration" class="content-section">
+            <h2>🌍 ادغام MCP با GIS</h2>
+            
+            <h3>مراحل ادغام</h3>
+            
+            <div class="example-box">
+                <h4><span class="step-number">1</span>نصب و راه‌اندازی MCP Server</h4>
+                <div class="code-block">
+# نصب MCP SDK
+npm install @modelcontextprotocol/sdk
+
+# ایجاد فایل server.js
+const { Server } = require('@modelcontextprotocol/sdk');
+const server = new Server({
+  name: 'gis-server',
+  version: '1.0.0'
+});
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <h4><span class="step-number">2</span>تعریف Resources برای داده‌های GIS</h4>
+                <div class="code-block">
+server.setRequestHandler(ResourceListRequest, async () => {
+  return {
+    resources: [
+      {
+        uri: 'gis://maps/satellite',
+        name: 'نقشه ماهواره‌ای',
+        mimeType: 'image/tiff'
+      },
+      {
+        uri: 'gis://data/boundaries',
+        name: 'مرزهای جغرافیایی',
+        mimeType: 'application/geo+json'
+      }
+    ]
+  };
+});
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <h4><span class="step-number">3</span>تعریف Tools برای عملیات GIS</h4>
+                <div class="code-block">
+server.setRequestHandler(ToolListRequest, async () => {
+  return {
+    tools: [
+      {
+        name: 'calculate_distance',
+        description: 'محاسبه فاصله بین دو نقطه',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            lat1: {type: 'number'},
+            lon1: {type: 'number'},
+            lat2: {type: 'number'},
+            lon2: {type: 'number'}
+          }
+        }
+      },
+      {
+        name: 'get_location_info',
+        description: 'دریافت اطلاعات مکان',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            latitude: {type: 'number'},
+            longitude: {type: 'number'}
+          }
+        }
+      }
+    ]
+  };
+});
+                </div>
+            </div>
+            
+            <h3>اتصال با ChatGPT/Claude</h3>
+            <div class="code-block">
+# فایل کانفیگ: claude_config.json
+{
+  "mcpServers": {
+    "gis": {
+      "command": "node",
+      "args": ["server.js"],
+      "env": {
+        "GIS_API_KEY": "your-key",
+        "GIS_BASE_URL": "https://gis-api.example.com"
+      }
+    }
+  }
+}
+            </div>
+        </div>
+        
+        <!-- بخش GeoJSON -->
+        <div id="geojson" class="content-section">
+            <h2>📍 GeoJSON و فرمت داده</h2>
+            
+            <h3>GeoJSON چیست؟</h3>
+            <p>
+                GeoJSON استانداردی است برای نمایش داده‌های جغرافیایی به صورت JSON. این فرمت توسط IETF تعریف شده است.
+            </p>
+            
+            <h3>انواع GeoJSON Objects</h3>
+            
+            <h4>1️⃣ Point (نقطه)</h4>
+            <div class="code-block">
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [35.6892, 51.3890]
+  },
+  "properties": {
+    "name": "تهران",
+    "type": "شهر"
+  }
+}
+            </div>
+            
+            <h4>2️⃣ LineString (خط)</h4>
+            <div class="code-block">
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "LineString",
+    "coordinates": [
+      [35.6892, 51.3890],
+      [35.7890, 51.4890],
+      [35.8890, 51.5890]
+    ]
+  },
+  "properties": {
+    "name": "جاده اصلی",
+    "length_km": 25
+  }
+}
+            </div>
+            
+            <h4>3️⃣ Polygon (چندضلعی)</h4>
+            <div class="code-block">
+{
+  "type": "Feature",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [[
+      [35.6892, 51.3890],
+      [35.7890, 51.3890],
+      [35.7890, 51.4890],
+      [35.6892, 51.4890],
+      [35.6892, 51.3890]
+    ]]
+  },
+  "properties": {
+    "name": "منطقه مسکونی",
+    "area_sqkm": 50
+  }
+}
+            </div>
+            
+            <h4>4️⃣ FeatureCollection (مجموعه ویژگی‌ها)</h4>
+            <div class="code-block">
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [35.6892, 51.3890]
+      },
+      "properties": {"name": "نقطه ۱"}
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [35.7892, 51.4890]
+      },
+      "properties": {"name": "نقطه ۲"}
+    }
+  ]
+}
+            </div>
+        </div>
+        
+        <!-- بخش مثال عملی -->
+        <div id="practical" class="content-section">
+            <h2>💻 مثال عملی: سیستم تحلیل خسارت</h2>
+            
+            <p>
+                با توجه به تخصص شما در حوزه خسارت و مهندسی، اینجا یک مثال عملی برای تحلیل خسارات زلزله آورده شده است.
+            </p>
+            
+            <h3>سناریو: تحلیل خسارات زلزله خوی</h3>
+            
+            <div class="example-box">
+                <h4>مرحله ۱: داده‌های مکانی خسارت</h4>
+                <div class="code-block">
+// damage_data.geojson
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [36.2564, 38.2808]
+      },
+      "properties": {
+        "building_id": "B001",
+        "damage_level": "شدید",
+        "damage_percentage": 85,
+        "building_type": "مسکونی",
+        "stories": 4,
+        "assessment_date": "1404-01-15",
+        "engineer": "محمد احمدی"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [36.2580, 38.2820]
+      },
+      "properties": {
+        "building_id": "B002",
+        "damage_level": "متوسط",
+        "damage_percentage": 45,
+        "building_type": "تجاری",
+        "stories": 2,
+        "assessment_date": "1404-01-15",
+        "engineer": "علی محمدی"
+      }
+    }
+  ]
+}
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <h4>مرحله ۲: ابزارهای تحلیل MCP</h4>
+                <div class="code-block">
+// damage_analysis_tools.js
+const damageAnalysisTools = [
+  {
+    name: 'analyze_damage_in_region',
+    description: 'تحلیل خسارات در منطقه مشخص',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        center_lat: {type: 'number', description: 'عرض جغرافیایی مرکز'},
+        center_lon: {type: 'number', description: 'طول جغرافیایی مرکز'},
+        radius_km: {type: 'number', description: 'شعاع جستجو بر حسب کیلومتر'}
+      }
+    }
+  },
+  {
+    name: 'calculate_damage_statistics',
+    description: 'محاسبه آمار خسارات',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        features: {type: 'array', description: 'مجموعه ویژگی‌های GeoJSON'}
+      }
+    }
+  },
+  {
+    name: 'generate_damage_report',
+    description: 'تولید گزارش خسارات',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        region_name: {type: 'string'},
+        damage_data: {type: 'object'},
+        report_format: {type: 'string', enum: ['pdf', 'html', 'json']}
+      }
+    }
+  }
+];
+                </div>
+            </div>
+            
+            <div class="example-box">
+                <h4>مرحله ۳: پیاده‌سازی Handler</h4>
+                <div class="code-block">
+server.setRequestHandler(ToolCallRequest, async (request) => {
+  const {name, arguments: args} = request.params;
+  
+  if (name === 'analyze_damage_in_region') {
+    const {center_lat, center_lon, radius_km} = args;
+    
+    // فیلتر خسارات در منطقه
+    const damagedBuildings = damageData.features.filter(f => {
+      const distance = calculateDistance(
+        center_lat, center_lon,
+        f.geometry.coordinates[1],
+        f.geometry.coordinates[0]
+      );
+      return distance <= radius_km;
+    });
+    
+    return {
+      content: [{
+        type: 'text',
+        text: JSON.stringify({
+          total_buildings: damagedBuildings.length,
+          severe_damage: damagedBuildings.filter(b => 
+            b.properties.damage_level === 'شدید'
+          ).length,
+          average_damage: (damagedBuildings.reduce((sum, b) => 
+            sum + b.properties.damage_percentage, 0
+          ) / damagedBuildings.length).toFixed(2),
+          buildings: damagedBuildings
+        }, null, 2)
+      }]
+    };
+  }
+});
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // شعاع زمین بر حسب کیلومتر
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon/2) * Math.sin(dLon/2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c;
+}
+                </div>
+            </div>
+            
+            <div class="highlight success">
+                <strong>✅ نتیجه:</strong> اکنون می‌توانید از ChatGPT/Claude درخواست کنید: "خسارات در منطقه خوی را تحلیل کن" و سیستم MCP خودکار داده‌ها را پردازش می‌کند!
+            </div>
+        </div>
+        
+        <!-- بخش موارد پیشرفته -->
+        <div id="advanced" class="content-section">
+            <h2>🚀 موارد پیشرفته</h2>
+            
+            <h3>1. Async Processing</h3>
+            <p>برای پردازش داده‌های بزرگ:</p>
+            <div class="code-block">
+async function processDamageDataAsync(geojsonData) {
+  try {
+    // پردازش موازی
+    const results = await Promise.all(
+      geojsonData.features.map(async (feature) => {
+        return await analyzeSingleBuilding(feature);
+      })
+    );
+    
+    return {
+      status: 'completed',
+      total: results.length,
+      results: results
+    };
+  } catch (error) {
+    console.error('خطا در پردازش:', error);
+    throw error;
+  }
+}
+            </div>
+            
+            <h3>2. Real-time Updates</h3>
+            <p>ارسال به‌روزرسانی‌های لحظه‌ای:</p>
+            <div class="code-block">
+server.setRequestHandler(ResourceSubscribeRequest, async (request) => {
+  const {uri} = request.params;
+  
+  // شنونده برای تغییرات داده‌های GIS
+  const listener = (data) => {
+    server.sendResourceUpdate({
+      uri: uri,
+      contents: [{
+        uri: uri,
+        mimeType: 'application/geo+json',
+        text: JSON.stringify(data)
+      }]
+    });
+  };
+  
+  gisDataSource.on('update', listener);
+  
+  return {};
+});
+            </div>
+            
+            <h3>3. Caching و Performance</h3>
+            <div class="code-block">
+const NodeCache = require('node-cache');
+const cache = new NodeCache({stdTTL: 600}); // 10 دقیقه
+
+async function getCachedDamageData(regionId) {
+  const cacheKey = `damage_${regionId}`;
+  
+  // بررسی کش
+  let data = cache.get(cacheKey);
+  if (data) {
+    return {data, source: 'cache'};
+  }
+  
+  // دریافت از منبع اصلی
+  data = await fetchDamageDataFromDB(regionId);
+  cache.set(cacheKey, data);
+  
+  return {data, source: 'database'};
+}
+            </div>
+            
+            <h3>4. Error Handling و Validation</h3>
+            <div class="code-block">
+function validateGeoJSON(data) {
+  if (!data.type || !['Feature', 'FeatureCollection'].includes(data.type)) {
+    throw new Error('نوع GeoJSON نامعتبر است');
+  }
+  
+  if (data.type === 'Feature' && !data.geometry) {
+    throw new Error('ویژگی باید دارای geometry باشد');
+  }
+  
+  if (data.geometry && !data.geometry.coordinates) {
+    throw new Error('Geometry باید دارای coordinates باشد');
+  }
+  
+  return true;
+}
+
+server.setRequestHandler(ToolCallRequest, async (request) => {
+  try {
+    validateGeoJSON(request.params.arguments.data);
+    // ادامه پردازش...
+  } catch (error) {
+    return {
+      isError: true,
+      content: [{
+        type: 'text',
+        text: `خطا: ${error.message}`
+      }]
+    };
+  }
+});
+            </div>
+        </div>
+        
+        <!-- بخش منابع -->
+        <div id="resources" class="content-section">
+            <h2>📖 منابع و مراجع</h2>
+            
+            <h3>📚 منابع رسمی</h3>
+            <ul>
+                <li>
+                    <strong>MCP Specification:</strong>
+                    <a href="https://modelcontextprotocol.io" target="_blank">modelcontextprotocol.io</a>
+                </li>
+                <li>
+                    <strong>GeoJSON Standard:</strong>
+                    <a href="https://geojson.org" target="_blank">geojson.org</a>
+                </li>
+                <li>
+                    <strong>QGIS Documentation:</strong>
+                    <a href="https://qgis.org/en/docs" target="_blank">qgis.org</a>
+                </li>
+                <li>
+                    <strong>ArcGIS REST API:</strong>
+                    <a href="https://developers.arcgis.com" target
+                      <a href="https://developers.arcgis.com" target="_blank">developers.arcgis.com</a>
+                </li>
+            </ul>
+            
+            <h3>🎓 دوره‌های آموزشی</h3>
+            <ul>
+                <li>Coursera - GIS Fundamentals</li>
+                <li>Udemy - Complete GIS Masterclass</li>
+                <li>Esri Training - ArcGIS Online</li>
+                <li>MIT OpenCourseWare - GIS and Data Visualization</li>
+            </ul>
+            
+            <h3>🛠️ ابزارهای مفید</h3>
+            <table>
+                <tr>
+                    <th>ابزار</th>
+                    <th>توضیح</th>
+                    <th>استفاده</th>
+                </tr>
+                <tr>
+                    <td><strong>QGIS</strong></td>
+                    <td>نرم‌افزار GIS متن‌باز</td>
+                    <td>تحلیل و ویرایش داده‌های جغرافیایی</td>
+                </tr>
+                <tr>
+                    <td><strong>Leaflet</strong></td>
+                    <td>کتابخانه نقشه‌های تعاملی</td>
+                    <td>نمایش نقشه‌ها در وب</td>
+                </tr>
+                <tr>
+                    <td><strong>Mapbox</strong></td>
+                    <td>سرویس نقشه‌سازی</td>
+                    <td>نقشه‌های پیشرفته و سفارشی</td>
+                </tr>
+                <tr>
+                    <td><strong>PostGIS</strong></td>
+                    <td>افزونه جغرافیایی PostgreSQL</td>
+                    <td>ذخیره و پرسش‌وجو داده‌های جغرافیایی</td>
+                </tr>
+                <tr>
+                    <td><strong>Turf.js</strong></td>
+                    <td>کتابخانه تحلیل جغرافیایی</td>
+                    <td>محاسبات جغرافیایی در JavaScript</td>
+                </tr>
+                <tr>
+                    <td><strong>Folium</strong></td>
+                    <td>کتابخانه Python</td>
+                    <td>تولید نقشه‌های تعاملی</td>
+                </tr>
+            </table>
+            
+            <h3>📦 کتابخانه‌های Node.js</h3>
+            <div class="code-block">
+# نصب کتابخانه‌های ضروری
+npm install @modelcontextprotocol/sdk
+npm install geojson
+npm install turf
+npm install express
+npm install cors
+npm install dotenv
+npm install node-cache
+npm install axios
+            </div>
+            
+            <h3>🌐 API‌های مفید</h3>
+            <ul>
+                <li><strong>OpenStreetMap:</strong> نقشه‌های رایگان و داده‌های جغرافیایی</li>
+                <li><strong>Google Maps API:</strong> خدمات نقشه‌سازی و جستجو</li>
+                <li><strong>Mapbox API:</strong> نقشه‌های سفارشی و تحلیل</li>
+                <li><strong>HERE Maps:</strong> ناوبری و نقشه‌سازی</li>
+                <li><strong>ArcGIS Online:</strong> سرویس‌های GIS در ابر</li>
+            </ul>
+        </div>
+        
+        <!-- پایان محتوا -->
+        <div class="footer">
+            <p>🎓 دوره آموزشی جامع MCP و GIS | آخرین به‌روزرسانی: ۲۴ آبان ۱۴۰۴</p>
+            <p>برای سوالات و مشاوره، با مدیریت فناوری تماس بگیرید</p>
+        </div>
+    </div>
+    
+    <script>
+        // تابع نمایش تب‌ها
+        function showTab(tabName) {
+            // مخفی کردن تمام بخش‌ها
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // غیرفعال کردن تمام دکمه‌ها
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // نمایش بخش انتخاب‌شده
+            document.getElementById(tabName).classList.add('active');
+            
+            // فعال کردن دکمه مرتبط
+            event.target.classList.add('active');
+            
+            // اسکرول به بالا
+            window.scrollTo(0, 0);
+        }
+        
+        // فعال‌کردن دکمه اول هنگام بارگذاری صفحه
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.tab-btn').classList.add('active');
+        });
+    </script>
+</body>
+</html>
+                      
